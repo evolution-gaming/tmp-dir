@@ -1,39 +1,39 @@
 package com.evolutiongaming.tmpdir
 
-import java.io.File
+import java.nio.file.{Files, Path}
+
+import com.evolutiongaming.file.PathHelper._
 
 trait TmpDir {
-  def file: File
+  def path: Path
   def delete(): Unit
 
-  override def toString: String = s"TmpDir(${ file.getAbsolutePath })"
+  override def toString: String = s"TmpDir($path)"
 }
 
 object TmpDir {
 
-  def apply(name: String): TmpDir = new TmpDir {
-    val file: File = {
-      val file = File.createTempFile(name, null)
-      require(file.delete(), s"cannot delete $file")
-      require(file.mkdirs(), s"cannot mkdirs $file")
-      file.deleteOnExit()
-      file
+  private lazy val deleteOnExit = {
+    var dirs = List.empty[TmpDir]
+    sys.addShutdownHook {
+      dirs.foreach(_.delete())
     }
-
-    def delete(): Unit = file.deleteRecursively()
+    dir: TmpDir =>
+      TmpDir.synchronized {
+        dirs = dir :: dirs
+      }
   }
 
-  implicit class FileOps(val self: File) extends AnyVal {
+  def apply(name: String): TmpDir = {
+    val dir = Files.createTempDirectory(name)
+    Files.createDirectories(dir)
+    val tmpDir = apply(dir)
+    deleteOnExit(tmpDir)
+    tmpDir
+  }
 
-    def deleteRecursively(): Unit = {
-      if (self.isDirectory) {
-        val files = Option(self.listFiles())
-        for {
-          files <- files
-          file <- files
-        } file.deleteRecursively()
-      }
-      self.delete()
-    }
+  private def apply(dir: Path): TmpDir = new TmpDir {
+    def path = dir
+    def delete() = path.deleteRecursively()
   }
 }
