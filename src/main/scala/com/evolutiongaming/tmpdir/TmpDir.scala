@@ -24,11 +24,11 @@ object TmpDir {
       }
   }
 
-  def apply(name: String): TmpDir = {
+  def apply(name: String, deleteOnExit: Boolean = true): TmpDir = {
     val dir = Files.createTempDirectory(name)
     Files.createDirectories(dir)
     val tmpDir = apply(dir)
-    deleteOnExit(tmpDir)
+    if (deleteOnExit) this.deleteOnExit(tmpDir)
     tmpDir
   }
 
