@@ -23,7 +23,10 @@ object PathHelper {
         }
       }
 
-      if (self.exists()) Files.walkFileTree(self, visitor)
+      if (self.exists()) {
+        Files.walkFileTree(self, visitor)
+        ()
+      }
     }
 
     def exists(): Boolean = Files.exists(self)
