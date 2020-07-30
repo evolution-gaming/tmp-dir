@@ -3,9 +3,10 @@ package com.evolutiongaming.tmpdir
 import java.nio.file.Files
 
 import com.evolutiongaming.file.PathHelper._
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class TmpDirSpec extends FunSuite with Matchers {
+class TmpDirSpec extends AnyFunSuite with Matchers {
 
   test("create and delete tmp dir") {
     val tmpDir = createTmpDir()
