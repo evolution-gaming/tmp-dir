@@ -18,7 +18,7 @@ object TmpDir {
     sys.addShutdownHook {
       dirs.foreach(_.delete())
     }
-    dir: TmpDir =>
+    (dir: TmpDir) =>
       TmpDir.synchronized {
         dirs = dir :: dirs
       }
