@@ -2,7 +2,7 @@ name := "tmp-dir"
 
 organization := "com.evolutiongaming"
 
-homepage := Some(new URL("http://github.com/evolution-gaming/tmp-dir"))
+homepage := Some(url("https://github.com/evolution-gaming/tmp-dir"))
 
 startYear := Some(2018)
 
@@ -25,3 +25,7 @@ libraryDependencies ++= Seq(
 licenses := Seq(("MIT", url("https://opensource.org/licenses/MIT")))
 
 releaseCrossBuild := true
+
+//addCommandAlias("check", "all versionPolicyCheck Compile/doc")
+addCommandAlias("check", "show version")
+addCommandAlias("build", "+all compile test")
